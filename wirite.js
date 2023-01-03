@@ -1,10 +1,24 @@
 const Excel = require('exceljs')
+const _ = require('lodash')
 
- function gengerate(arr,month, dirFile) {
+const chalk = require('chalk')
+
+function gengerate(arr, month, fileName, suffix) {
   const workbook = new Excel.Workbook()
   const worksheet = workbook.addWorksheet('Sheet1')
 
   const alignment = { vertical: 'middle', horizontal: 'center' }
+
+  worksheet.pageSetup.margins = {
+    left: 0.2,
+    right: 0.2,
+  }
+
+  // worksheet.pageSetup.printArea = 'A1:G34';
+  worksheet.pageSetup.horizontalCentered = true
+
+  worksheet.pageSetup.fitToPage = true
+  worksheet.pageSetup.paperSize = 9
 
   const font = {
     name: '宋体',
@@ -53,7 +67,7 @@ const Excel = require('exceljs')
   row2.font = { ...boundfont, size: 10 }
   row2.alignment = { ...alignment, horizontal: 'left' }
 
-  row.getCell(1).value = '天佮劳务宝思利产线计时明细表'
+  row.getCell(1).value = fileName
 
   row2.getCell(1).value = `记录月份：${month}月`
 
@@ -68,6 +82,20 @@ const Excel = require('exceljs')
     }
   }
 
+  const rows = _.map(arr, (item, index) => {
+    if (!item.dayNum) {
+      return [index + 1, '', item.name, '', item.time, '', item.dep]
+    }
+    return [
+      index + 1,
+      `${month}月${item.dayNum}日`,
+      item.name,
+      item.white ? '白' : '夜',
+      item.time,
+      '',
+      item.dep,
+    ]
+  })
   worksheet.addTable({
     name: 'table',
     ref: 'A3',
@@ -81,11 +109,16 @@ const Excel = require('exceljs')
       { name: '领班签字' },
       { name: '备注' },
     ],
-    rows: [],
+    rows,
   })
-  workbook.xlsx.writeFile(`./dist/${dirFile}.xlsx`)
+  workbook.xlsx
+    .writeFile(`./dist/${fileName}-${suffix}.xlsx`)
+    .then(() => {})
+    .catch(() => {
+      console.log(chalk.red.bold('写入文件出错了!!!!!!!'))
+    })
 }
 
 module.exports = {
-    gengerate
+  gengerate,
 }
