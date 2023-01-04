@@ -19,6 +19,9 @@ function forIn(arr) {
     if (arr[end].dayNum === arr[end - 1].dayNum) {
       end = _.findIndex(arr, (o) => o.dayNum === arr[end].dayNum)
     }
+    if(end > 31 || end === 0) {
+      end = 31
+    }
     const pre = _.slice(arr, 0, end)
     const next = _.slice(arr, end)
     return _.concat([pre], forIn(next))
