@@ -27,9 +27,10 @@ function forIn(arr) {
 
 function dtoMap(cur) {
   const newCur = { ...cur }
-  if (newCur.dayList && newCur.dayList.length === 0) {
-    newCur.dayList = [{ dayNum: 0, time: 0 }]
-  }
+  // 不统计 工时为0 的人
+  // if (newCur.dayList && newCur.dayList.length === 0) {
+  //   newCur.dayList = [{ dayNum: 0, time: 0 }]
+  // }
   let arr = _.map(newCur.dayList, (item) => {
     return {
       ...item,
