@@ -96,7 +96,15 @@ function readFile(dirFile) {
 
   const AllList = _.map(sheetJson, (sjObj, index) => {
     const depAll = sjObj[C]
-    const dep = depAll && depAll.split(/([A-Z]+)/)[1]
+    let dep = depAll && depAll.split(/([A-Z]+)/)[1]
+
+    if(!dep) {
+      dep = depAll && depAll.split('-')[0]
+    }
+
+    if(!dep) {
+      dep = depAll
+    }
 
     const newObj = { dayList: [], jobNum: sjObj[B], dep, name: sjObj[D] }
 
@@ -127,6 +135,11 @@ function readFile(dirFile) {
     AllList,
     (item) => item.dayList && item.dayList.length < 5 && item.dep === 'PET',
   )
+  const mergeOtherList = _.filter(
+    AllList,
+    (item) => item.dayList && item.dayList.length < 5 && item.dep !== 'PET' && item.dep !== 'PE',
+  )
+
   let commonList = _.filter(
     AllList,
     (item) => item.dayList && item.dayList.length >= 5,
@@ -134,6 +147,7 @@ function readFile(dirFile) {
 
   const peList = sortMergeList(mergePEList)
   const petList = sortMergeList(mergePETList)
+  const otherList = sortMergeList(mergeOtherList)
 
   commonList = _.map(commonList, (o, index, collection) => {
     const hasIndex = _.findIndex(
@@ -153,7 +167,7 @@ function readFile(dirFile) {
     return list
   })
 
-  return { peList, petList, commonList }
+  return { peList, petList,otherList, commonList }
 }
 
 module.exports = {

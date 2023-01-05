@@ -3,20 +3,25 @@ const fs = require('fs-extra')
 const { gengerate } = require('./wirite')
 const { readFile } = require('./read')
 function start(fromFile, toFileName) {
-  const { peList, petList, commonList } = readFile(fromFile)
+  const { peList, petList,otherList, commonList } = readFile(fromFile)
   const Mother = fromFile.substring(4,6)
 
   const FileName = toFileName
 
   function iowritePPP(list) {
     _.forEach(list, (item, index) => {
-      gengerate(item, Mother, FileName, `${item[0].dep}-${index + 1}`)
+      if(item && item.length > 0) {
+        const depName = item[0].dep ? item[0].dep : '(其他)'
+        gengerate(item, Mother, FileName, `${depName}-${index + 1}`)
+      }
     })
   }
 
   function iowriteCommon(list) {
     _.forEach(list, (item) => {
-      gengerate(item, Mother, FileName, `${item[0].name}`)
+      if(item && item.length > 0) {
+        gengerate(item, Mother, FileName, `${item[0].name}`)
+      }
     })
   }
 
@@ -26,6 +31,7 @@ function start(fromFile, toFileName) {
     }
     iowritePPP(peList)
     iowritePPP(petList)
+    iowritePPP(otherList)
     iowriteCommon(commonList)
   })
 }

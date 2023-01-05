@@ -83,6 +83,11 @@ function gengerate(arr, month, fileName, suffix) {
   }
 
   const rows = _.map(arr, (item, index) => {
+    const noIndex = _.findIndex(Object.values(item), (val) => !val)
+
+    if (noIndex > -1) {
+      console.log(item, chalk.red.bold('====数据不全===='))
+    }
     if (!item.dayNum) {
       return [index + 1, '', item.name, '', item.time, '', item.dep]
     }
