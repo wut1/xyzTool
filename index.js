@@ -4,7 +4,8 @@ const { gengerate } = require('./wirite')
 const { readFile } = require('./read')
 function start(fromFile, toFileName) {
   const { peList, petList,otherList, commonList } = readFile(fromFile)
-  const Mother = fromFile.substring(4,6)
+  let Mother = fromFile.substring(4,6)
+  Mother = parseInt(Mother)
 
   const FileName = toFileName
 
@@ -35,5 +36,5 @@ function start(fromFile, toFileName) {
     iowriteCommon(commonList)
   })
 }
-
-// start(fileFrom, fileName)
+// （xxxx01xxx.xlsx,'xxxxxxx产线计时明细表'）
+// start('xxxx01xxx.xlsx', 'xxxxxxx产线计时明细表')
