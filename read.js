@@ -94,6 +94,8 @@ function readFile(dirFile) {
     (sjObj) => !!sjObj[D] && sjObj[B] !== '工号',
   )
 
+  let count = 0
+
   const AllList = _.map(sheetJson, (sjObj, index) => {
     const depAll = sjObj[C]
     let dep = depAll && depAll.split(/([A-Z]+)/)[1]
@@ -106,7 +108,7 @@ function readFile(dirFile) {
       dep = depAll
     }
 
-    const newObj = { dayList: [], jobNum: sjObj[B], dep, name: sjObj[D] }
+    const newObj = { dayList: [], jobNum: sjObj[B] || `ac_${count++}`, dep, name: sjObj[D] }
 
     _.forEach(Object.entries(sjObj), ([key, value]) => {
       const dayNum = mapJsonA[key]
